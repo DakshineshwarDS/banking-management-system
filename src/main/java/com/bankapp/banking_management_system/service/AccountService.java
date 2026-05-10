@@ -1,5 +1,7 @@
 package com.bankapp.banking_management_system.service;
 
+import javax.management.RuntimeErrorException;
+
 import org.springframework.stereotype.Service;
 
 import com.bankapp.banking_management_system.entity.Account;
@@ -15,6 +17,31 @@ public class AccountService {
     }
 
     public Account saveAccount(Account account) {
+        return accountRepository.save(account);
+    }
+
+    public Account getAccountById(Long id) {
+        return accountRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Account Not Found"));
+    }
+
+    public Account depositAmount(Long id, Double amount) {
+        Account account = accountRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Account Not Found"));
+
+        account.setBalance(account.getBalance() + amount);
+
+        return accountRepository.save(account);
+    }
+
+    public Account withDrawAmount(Long id, Double amount) {
+        Account account = getAccountById(id);
+
+        if (account.getBalance() < amount) {
+            throw new RuntimeException("Insufficient balance!!!");
+        }
+
+        account.setBalance(account.getBalance() - amount);
         return accountRepository.save(account);
     }
 }
