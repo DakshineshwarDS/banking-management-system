@@ -1,5 +1,7 @@
 package com.bankapp.banking_management_system.controller;
 
+import com.bankapp.banking_management_system.dto.AccountDto;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -34,6 +36,18 @@ public class AccountController {
     @PutMapping("/withdraw/{id}")
     public Account withDraw(@PathVariable Long id, @RequestParam Double amount) {
         return accountService.withDrawAmount(id, amount);
+    }
+
+    @PostMapping("/create")
+    public Account createAccount(@Valid @RequestBody AccountDto accountDto) {
+        Account account = new Account();
+
+        account.setAccountHolderName(accountDto.getAccountHolderName());
+        account.setAccountNumber(accountDto.getAccountNumber());
+        account.setAccountType(account.getAccountType());
+        account.setBalance(accountDto.getBalance());
+
+        return accountService.saveAccount(account);
     }
 
 }
