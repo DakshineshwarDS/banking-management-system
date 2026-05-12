@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import com.bankapp.banking_management_system.entity.Account;
 import com.bankapp.banking_management_system.repository.AccountRepository;
 
+import java.util.List;
+
 @Service
 public class AccountService {
 
@@ -43,5 +45,14 @@ public class AccountService {
 
         account.setBalance(account.getBalance() - amount);
         return accountRepository.save(account);
+    }
+
+    public List<Account> getAllAccount() {
+        return accountRepository.findAll();
+    }
+
+    public Account getAllAccountsById(Long id) {
+        return accountRepository.findById(id)
+                .orElseThrow( () -> new RuntimeException("Id not found!!"));
     }
 }

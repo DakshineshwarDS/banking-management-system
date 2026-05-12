@@ -2,16 +2,13 @@ package com.bankapp.banking_management_system.controller;
 
 import com.bankapp.banking_management_system.dto.AccountDto;
 import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import com.bankapp.banking_management_system.entity.Account;
 import com.bankapp.banking_management_system.service.AccountService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/accounts")
@@ -48,6 +45,18 @@ public class AccountController {
         account.setBalance(accountDto.getBalance());
 
         return accountService.saveAccount(account);
+    }
+
+    @GetMapping("/getAll")
+    public ResponseEntity<List<Account>> getAllAccount() {
+
+        return ResponseEntity.ok(accountService.getAllAccount());
+    }
+
+    @GetMapping("/getAllAccountsById/{id}")
+    public ResponseEntity<Account> getAllAccountById(@PathVariable Long id) {
+
+        return ResponseEntity.ok(accountService.getAllAccountsById(id));
     }
 
 }
