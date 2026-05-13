@@ -3,6 +3,8 @@ package com.bankapp.banking_management_system.service;
 import javax.management.RuntimeErrorException;
 
 import com.bankapp.banking_management_system.dto.AccountDto;
+import com.bankapp.banking_management_system.entity.Transaction;
+import com.bankapp.banking_management_system.repository.TransactionRepository;
 import org.springframework.stereotype.Service;
 
 import com.bankapp.banking_management_system.entity.Account;
@@ -14,9 +16,12 @@ import java.util.List;
 public class AccountService {
 
     AccountRepository accountRepository;
+    TransactionRepository transactionRepository;
 
-    public AccountService(AccountRepository accountRepository) {
+    public AccountService(AccountRepository accountRepository,
+                          TransactionRepository transactionRepository) {
         this.accountRepository = accountRepository;
+        this.transactionRepository = transactionRepository;
     }
 
     public Account saveAccount(Account account) {
@@ -29,10 +34,17 @@ public class AccountService {
     }
 
     public Account depositAmount(Long id, Double amount) {
-        Account account = accountRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Account Not Found"));
+        Account account = getAccountById(id);
 
         account.setBalance(account.getBalance() + amount);
+
+        Transaction transaction = new Transaction();
+
+        transaction.setTransactionType("DEPOSIT");
+        transaction.setAmount(amount);
+        transaction.setAccount(account);
+
+        transactionRepository.save(transaction);
 
         return accountRepository.save(account);
     }
@@ -45,6 +57,14 @@ public class AccountService {
         }
 
         account.setBalance(account.getBalance() - amount);
+
+        Transaction transaction = new Transaction();
+
+        transaction.setTransactionType("WITHDRAW");
+        transaction.setAmount(amount);
+        transaction.setAccount(account);
+
+        transactionRepository.save(transaction);
         return accountRepository.save(account);
     }
 
