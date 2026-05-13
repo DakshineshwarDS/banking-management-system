@@ -2,6 +2,7 @@ package com.bankapp.banking_management_system.service;
 
 import javax.management.RuntimeErrorException;
 
+import com.bankapp.banking_management_system.dto.AccountDto;
 import org.springframework.stereotype.Service;
 
 import com.bankapp.banking_management_system.entity.Account;
@@ -54,5 +55,24 @@ public class AccountService {
     public Account getAllAccountsById(Long id) {
         return accountRepository.findById(id)
                 .orElseThrow( () -> new RuntimeException("Id not found!!"));
+    }
+
+    public  Account updateAccount(Long id, AccountDto accountDto) {
+        Account existingAccount = getAccountById(id);
+
+        existingAccount.setAccountHolderName(accountDto.getAccountHolderName());
+        existingAccount.setAccountNumber(accountDto.getAccountNumber());
+        existingAccount.setAccountType(accountDto.getAccountType());
+        existingAccount.setBalance(accountDto.getBalance());
+
+        return accountRepository.save(existingAccount);
+    }
+
+    public String deleteAccount(Long id) {
+        Account deleteAccount = getAccountById(id);
+
+        accountRepository.delete(deleteAccount);
+
+        return "Account deleted successfully!!";
     }
 }

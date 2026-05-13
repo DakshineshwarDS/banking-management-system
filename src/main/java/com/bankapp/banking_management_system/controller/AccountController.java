@@ -59,4 +59,14 @@ public class AccountController {
         return ResponseEntity.ok(accountService.getAllAccountsById(id));
     }
 
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Account> updateAccount(@PathVariable Long id, @Valid @RequestBody AccountDto accountDto) {
+        return ResponseEntity.ok(accountService.updateAccount(id, accountDto));
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteAccount(@PathVariable Long id) {
+        return ResponseEntity.ok(accountService.deleteAccount(id));
+    }
+
 }
