@@ -1,6 +1,7 @@
 package com.bankapp.banking_management_system.controller;
 
 import com.bankapp.banking_management_system.dto.AccountDto;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,11 +21,6 @@ public class AccountController {
         this.accountService = accountService;
     }
 
-    @PostMapping()
-    public Account saveAccount(@RequestBody Account account) {
-        return accountService.saveAccount(account);
-    }
-
     @PutMapping("/deposit/{id}")
     public Account deposit(@PathVariable Long id, @RequestParam Double amount) {
         return accountService.depositAmount(id, amount);
@@ -35,18 +31,20 @@ public class AccountController {
         return accountService.withDrawAmount(id, amount);
     }
 
+    @Operation(summary = "Create a new account")
     @PostMapping("/create")
     public Account createAccount(@Valid @RequestBody AccountDto accountDto) {
         Account account = new Account();
 
         account.setAccountHolderName(accountDto.getAccountHolderName());
         account.setAccountNumber(accountDto.getAccountNumber());
-        account.setAccountType(account.getAccountType());
+        account.setAccountType(accountDto.getAccountType());
         account.setBalance(accountDto.getBalance());
 
         return accountService.saveAccount(account);
     }
 
+    @Operation(summary = "Get all bank accounts")
     @GetMapping("/getAll")
     public ResponseEntity<List<Account>> getAllAccount() {
 

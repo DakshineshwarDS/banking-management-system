@@ -1,5 +1,6 @@
 package com.bankapp.banking_management_system.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,5 +24,6 @@ public class Account {
     private String accountType;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Transaction> transactions;
 }
